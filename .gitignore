@@ -1,6 +1,6 @@
 docker-compose-secret.yaml
 
-
+.idea/
 
 profile.out
 coverage.txt
