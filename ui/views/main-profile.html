@@ -1,0 +1,110 @@
+<html>
+	<head>
+		<title></title>
+		<style type="text/css">
+			/* Bordered form */
+			form {
+			  border: 3px solid #f1f1f1;
+			  margin: 0 auto; 
+			  width:400px;
+			}
+
+			/* Full-width inputs */
+			input[type=text], input[type=password] {
+			  width: 100%;
+			  padding: 12px 20px;
+			  margin: 8px 0;
+			  display: inline-block;
+			  border: 1px solid #ccc;
+			  box-sizing: border-box;
+			}
+
+			/* Set a style for all buttons */
+			button {
+			  background-color: #4CAF50;
+			  color: white;
+			  padding: 14px 20px;
+			  margin: 8px 0;
+			  border: none;
+			  cursor: pointer;
+			  width: 40%;
+			}
+
+			/* Add a hover effect for buttons */
+			button:hover {
+			  opacity: 0.8;
+			}
+
+			/* Add padding to containers */
+			.container {
+			  padding: 16px;
+			}
+			.container-btn {
+			  padding-top: 15px;
+			  padding-bottom: 15px;
+			  padding-left: 5px;
+			  padding-right: 5px;
+			  text-align: center;
+			}
+		</style>
+		<script type="text/javascript">
+			function logout() {
+				var xhttp = new XMLHttpRequest();
+				xhttp.responseType = 'json';
+				xhttp.onreadystatechange = function() {
+				    if (this.readyState == 4) {
+			    		location.href='/';
+				    }
+				};
+				xhttp.open("POST", "/logout", true);
+				xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				xhttp.send();
+			}
+		</script>
+	</head>
+	<body>
+		<form>
+			<div style="text-align: center">
+				<h2>Main Profile</h2>
+			</div>
+			<div class="container">
+				<label for="Fullname"><b>Full Name</b></label>
+				<input id="fullname" type="text" name="Fullname" disabled>
+				<label for="Address"><b>Address</b></label>
+				<input id="address" type="text" name="Address" disabled>
+				<label for="Telephone"><b>Telephone</b></label>
+				<input id="telephone" type="text" name="Telephone" disabled>
+				<label for="Email"><b>Email</b></label>
+				<input id="email" type="text" name="Email" disabled>
+			</div>
+			<div class="container-btn">
+				<button onclick="location.href='/updateprofile'" type="button">Edit</button>
+				<button type="button" onclick="logout()">Logout</button>
+			</div>
+		</form> 
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function(event) {
+			    var xhttp = new XMLHttpRequest();
+				xhttp.responseType = 'json';
+				xhttp.onreadystatechange = function() {
+				    if (this.readyState == 4) {
+			    		var res = this.response;
+				    	if(res.Success) {
+			    			var data = res.Data
+			    			document.getElementById("fullname").value = data.Name;
+				    		document.getElementById("address").value = data.Address;
+				    		document.getElementById("telephone").value = data.Telephone;
+				    		document.getElementById("email").value = data.Email;
+				    	} else {
+
+				    	}
+				    }
+				};
+				xhttp.open("GET", "/user", true);
+				xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				xhttp.send();
+			});
+		</script>
+	</body>
+</html>

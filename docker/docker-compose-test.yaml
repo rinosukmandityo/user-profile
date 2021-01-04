@@ -1,0 +1,28 @@
+version: '3'
+services:
+  test:
+    depends_on:
+      - mysql
+    image: golang:1.14.13-alpine3.12
+    container_name: user-profile-service-test
+    volumes:
+      - ${PWD:-./}:/opt/go/src/github.com/rinosukmandityo/user-profile
+      - ${GOPATH}/pkg/mod:/opt/go/pkg/mod
+    working_dir: /opt/go/src/github.com/rinosukmandityo/user-profile
+    environment:
+      - url=user:Password.1@tcp(mysql:3306)/users
+      - timeout=10
+      - db=users
+      - driver=mysql
+
+  mysql:
+    image: mysql:5.7.26
+    restart: always
+    container_name: user-profile-database-test
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: 'users'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'Password.1'
+      MYSQL_ROOT_PASSWORD: 'Password.1'

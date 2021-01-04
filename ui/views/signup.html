@@ -1,0 +1,118 @@
+<html>
+	<head>
+		<title></title>
+		<style type="text/css">
+			/* Bordered form */
+			form {
+			  border: 3px solid #f1f1f1;
+			  margin: 0 auto; 
+			  width:300px;
+			}
+
+			/* Full-width inputs */
+			input[type=text], input[type=password] {
+			  width: 100%;
+			  padding: 12px 20px;
+			  margin: 8px 0;
+			  display: inline-block;
+			  border: 1px solid #ccc;
+			  box-sizing: border-box;
+			}
+
+			/* Set a style for all buttons */
+			button {
+			  background-color: #4CAF50;
+			  color: white;
+			  padding: 14px 20px;
+			  margin: 8px 0;
+			  border: none;
+			  cursor: pointer;
+			  width: 100%;
+			}
+
+			/* Add a hover effect for buttons */
+			button:hover {
+			  opacity: 0.8;
+			}
+
+			/* Add padding to containers */
+			.container {
+			  padding: 16px;
+			}
+			.container-link {
+			  padding-top: 15px;
+			  padding-bottom: 15px;
+			}
+			.errmsg {
+				color: red;
+			}
+
+			/* Change styles for span on extra small screens */
+			@media screen and (max-width: 300px) {
+			  span.existing-login {
+			    display: block;
+			    float: none;
+			  }
+			} 
+		</style>
+		<script type="text/javascript">
+			function signup() {
+				if(document.getElementById("password").value == '') {
+					document.getElementById("errPassword").innerHTML = 'Password cannot be empty'
+					document.getElementById("errEmail").innerHTML = ''
+					return
+				}
+				var xhttp = new XMLHttpRequest();
+				xhttp.responseType = 'json';
+				xhttp.onreadystatechange = function() {
+				    if (this.readyState == 4) {
+				    	var res = this.response;
+				    	if(this.status == 200) {
+				    		location.href='/updateprofile'
+				    	} else {
+				    		if(res.Message.toLowerCase().indexOf("email") >= 0) {
+				    			document.getElementById("errEmail").innerHTML = res.Message
+				    			document.getElementById("errPassword").innerHTML = ''
+				    		}
+				    	}
+				    }
+				};
+				var param = {
+					Email: document.getElementById("email").value,
+					Password: document.getElementById("password").value
+				}
+				xhttp.open("POST", "/dosignup", true);
+				xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				xhttp.send(JSON.stringify(param));
+			}
+		</script>
+	</head>
+	<body>
+		<form>
+			<div style="text-align: center">
+				<h2>Sign Up</h2>
+			</div>
+			<div class="container">
+				<label for="Email"><b>Email</b></label>
+				<input id="email" type="text" placeholder="Enter Email" name="Email" required>
+				<label id="errEmail" class="errmsg"></label><br />
+
+				<label for="Password"><b>Password</b></label>
+				<input id="password" type="password" placeholder="Enter Password" name="Password" required>
+				<label id= "errPassword" class="errmsg">{{.PasswordError}}</label><br />
+
+				<button type="button" onclick="signup()">Sign Up</button>
+			</div>
+			<div style="text-align: center;">
+				<span>OR</span>
+			</div>
+			<div class="container">
+				<button onclick="location.href='/googlesignup'" type="button"><b>Sign Up with Google</b></button>
+			</div>
+
+			<div class="container-link" style="text-align: center; background-color:#f1f1f1">
+				<span class="existing-login"><a href="/">Already have an account? Login</a></span>
+			</div>
+		</form> 
+	</body>
+</html>

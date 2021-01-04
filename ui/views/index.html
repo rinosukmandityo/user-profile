@@ -1,0 +1,133 @@
+<html>
+	<head>
+		<title></title>
+		<style type="text/css">
+			/* Bordered form */
+			form {
+			  border: 3px solid #f1f1f1;
+			  margin: 0 auto; 
+			  width:300px;
+			}
+
+			/* Full-width inputs */
+			input[type=text], input[type=password] {
+			  width: 100%;
+			  padding: 12px 20px;
+			  margin: 8px 0;
+			  display: inline-block;
+			  border: 1px solid #ccc;
+			  box-sizing: border-box;
+			}
+
+			/* Set a style for all buttons */
+			button {
+			  background-color: #4CAF50;
+			  color: white;
+			  padding: 14px 20px;
+			  margin: 8px 0;
+			  border: none;
+			  cursor: pointer;
+			  width: 100%;
+			}
+
+			/* Add a hover effect for buttons */
+			button:hover {
+			  opacity: 0.8;
+			}
+
+			/* Add padding to containers */
+			.container {
+			  padding: 16px;
+			}
+			.container-link {
+			  padding-top: 15px;
+			  padding-bottom: 32px;
+			  padding-left: 10px;
+			  padding-right: 10px;
+			}
+			.errmsg {
+				color: red;
+			}
+
+			/* The "Sign Up" text */
+			span.signup {
+			  float: left;
+			}
+
+			/* The "Forgot password" text */
+			span.psw {
+			  float: right;
+			}
+
+			/* Change styles for span on extra small screens */
+			@media screen and (max-width: 300px) {
+			  span.psw {
+			    display: block;
+			    float: none;
+			  }
+			  span.signup {
+			    display: block;
+			    float: none;
+			  }
+			} 
+		</style>
+		<script type="text/javascript">
+			function auth() {
+				var xhttp = new XMLHttpRequest();
+				xhttp.responseType = 'json';
+				xhttp.onreadystatechange = function() {
+				    if (this.readyState == 4) {
+				    	var res = this.response;
+				    	if(this.status == 200) {
+				    		location.href='/mainprofile';
+				    	} else {
+				    		if(res.Message.toLowerCase().indexOf("email") >= 0) {
+				    			document.getElementById("errEmail").innerHTML = res.Message
+				    			document.getElementById("errPassword").innerHTML = ''
+				    		} else if(res.Message.toLowerCase().indexOf("password") >= 0) {
+								document.getElementById("errPassword").innerHTML = res.Message
+								document.getElementById("errEmail").innerHTML = ''
+				    		}
+				    	}
+				    }
+				};
+				var param = {
+					Email: document.getElementById("email").value,
+					Password: document.getElementById("password").value
+				}
+				xhttp.open("POST", "/auth", true);
+				xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+				xhttp.send(JSON.stringify(param));
+			}
+		</script>
+	</head>
+	<body>
+		<form>
+			<div style="text-align: center">
+				<h2>Login</h2>
+			</div>
+			<div class="container">
+				<label for="Email"><b>Email</b></label>
+				<input id="email" type="text" placeholder="Enter Email" name="Email" required>
+				<label id= "errEmail" class="errmsg">{{.EmailError}}</label><br />
+
+				<label for="Password"><b>Password</b></label>
+				<input id="password" type="password" placeholder="Enter Password" name="Password" required>
+				<label id= "errPassword" class="errmsg">{{.PasswordError}}</label><br />
+
+				<button type="button" onclick="auth()">Login</button>
+			</div>
+			<div style="text-align: center;">
+				<span>OR</span>
+			</div>
+			<div class="container">
+				<button onclick="location.href='/googlelogin'" type="button"><b>Log In with Google</b></button>
+			</div>
+
+			<div class="container-link" style="background-color:#f1f1f1">
+				<span class="signup"><a href="/signup">New User Sign-Up</a></span>
+				<span class="psw"><a href="/forgotpassword">Forgot Password</a></span>
+			</div>
+		</form> 
+	</body>
+</html>

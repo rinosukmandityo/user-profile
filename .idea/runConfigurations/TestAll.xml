@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TestAll" type="GoTestRunConfiguration" factoryName="Go Test">
+    <module name="user-profile" />
+    <working_directory value="$PROJECT_DIR$" />
+    <go_parameters value="-i -tags test" />
+    <envs>
+      <env name="url" value="user:Password.1@tcp(127.0.0.1:3306)/users" />
+      <env name="timeout" value="10" />
+      <env name="db" value="users" />
+      <env name="driver" value="mysql" />
+    </envs>
+    <framework value="gotest" />
+    <kind value="DIRECTORY" />
+    <directory value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
+</component>

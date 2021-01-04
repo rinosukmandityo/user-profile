@@ -1,0 +1,42 @@
+version: '3'
+services:
+  test:
+    depends_on:
+      - mysql
+    image: golang:1.14.13-alpine3.12
+    container_name: user-profile-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ${PWD:-./}:/opt/go/src/github.com/rinosukmandityo/user-profile
+      - ${GOPATH}/pkg/mod:/opt/go/pkg/mod
+    working_dir: /opt/go/src/github.com/rinosukmandityo/user-profile
+    environment:
+      - url=user:Password.1@tcp(mysql:3306)/users
+      - timeout=10
+      - db=users
+      - driver=mysql
+      - port=8000
+      - GOOGLE_LOGIN_REDIRECT=http://localhost:8000/googlecallback
+      - GOOGLE_SIGNUP_REDIRECT=http://localhost:8000/googlesignupcallback
+      - GOOGLE_CLIENT_ID=your_google_client_ID
+      - GOOGLE_CLIENT_SECRET=your_google_client_secret
+      - SMTP_HOST=your_smtp_host_email
+      - SMTP_PORT=your_smtp_port_email
+      - SOURCE_EMAIL=your_source_email
+      - EMAIL_PASSWORD=your_smtp_password_email
+    command: >
+      sh -c "sleep 3 &&
+            go run main.go"
+
+  mysql:
+    image: mysql:5.7.26
+    restart: always
+    container_name: user-profile-database
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_DATABASE: 'users'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'Password.1'
+      MYSQL_ROOT_PASSWORD: 'Password.1'
